@@ -5,7 +5,7 @@ import Tile from './components/Tile';
 const App = () => {
 
   const handleDragStart = (event: React.DragEvent) => {
-    // Set data or handle the drag start
+    // Handle drag start logic if needed
   };
   return (
     <div className="App">

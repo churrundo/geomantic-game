@@ -7,15 +7,21 @@ type TileProps = {
 };
 
 const Tile: React.FC<TileProps> = ({ figure, onDragStart }) => {
-  return (
-    <div 
-      draggable
-      onDragStart={onDragStart}
-      className="tile"
-    >
-      {figure}
-    </div>
-  );
-};
+    const handleDragStart = (event: React.DragEvent) => {
+      event.dataTransfer.setData("figure", figure);
+      onDragStart(event);
+    };
+  
+    return (
+      <div 
+        draggable
+        onDragStart={handleDragStart}
+        className="tile"
+      >
+        {figure}
+      </div>
+    );
+  };
+  
 
 export default Tile;

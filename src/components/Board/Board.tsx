@@ -1,4 +1,5 @@
 import React from 'react';
+import './Board.css';
 
 const Board: React.FC = () => {
   const gridSize = 4;

@@ -12,8 +12,8 @@ type HandProps = {
 const Hand: React.FC<HandProps> = ({ tiles, setTiles }) => {
   const handleTileDrop = (targetFigure: string) => (event: React.DragEvent) => {
     event.preventDefault();
-    const droppedFigure = event.dataTransfer.getData("figure");
-
+    const droppedFigure = event.dataTransfer.getData("text/plain");
+  
     setTiles((prevTiles) => {
       const newTiles = [...prevTiles];
       const targetIndex = newTiles.indexOf(targetFigure);

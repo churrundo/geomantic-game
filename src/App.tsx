@@ -9,11 +9,14 @@ const App = () => {
   const handleDiceRoll = (figures: string[]) => {
     setHandTiles(figures); 
   };
+  const removeTileFromHand = (figure: string) => {
+    setHandTiles((prevTiles) => prevTiles.filter(tile => tile !== figure));
+  };
 
   return (
     <div className="App">
       <h1>Geomantic Game</h1>
-      <Board />
+      <Board onTilePlaced={removeTileFromHand} />
       <Dice onRoll={handleDiceRoll} />
       <Hand tiles={handTiles} setTiles={setHandTiles} />
     </div>

@@ -9,16 +9,15 @@ export const mergeTiles = (tile1: string, tile2: string): string => {
   const binary1 = tile1.padStart(4, "0");
   const binary2 = tile2.padStart(4, "0");
 
-  // Convert binary strings to numbers
   const num1 = parseInt(binary1, 2);
   const num2 = parseInt(binary2, 2);
 
-  // Perform bitwise XOR and convert back to binary string
   const merged = (num1 ^ num2).toString(2).padStart(4, "0");
 
   return merged;
 };
 
+//Permutates hand figures
 export const performMulligan = (hand: string[]): string[] => {
   if (hand.length !== 4) {
     throw new Error("Mulligan requires a full hand of 4 tiles.");

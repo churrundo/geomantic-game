@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import Board from './components/Board';
 import Hand from './components/Hand';
 import Dice from './components/Dice';
@@ -7,11 +7,12 @@ const App = () => {
   const [handTiles, setHandTiles] = useState<string[]>([]);
 
   const handleDiceRoll = (figures: string[]) => {
+    console.log("Dice rolled, new figures:", figures);
     setHandTiles(figures); 
   };
-  const removeTileFromHand = (figure: string) => {
+  const removeTileFromHand = useCallback((figure: string) => {
     setHandTiles((prevTiles) => prevTiles.filter(tile => tile !== figure));
-  };
+  }, []);
 
   return (
     <div className="App">

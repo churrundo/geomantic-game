@@ -13,14 +13,30 @@ const Hand: React.FC<HandProps> = ({ tiles, setTiles }) => {
   const handleTileDrop = (targetFigure: string) => (event: React.DragEvent) => {
     event.preventDefault();
     const droppedFigure = event.dataTransfer.getData("text/plain");
-  
+
+    console.log(`Tile dropped: ${droppedFigure} onto ${targetFigure}`);
+
     setTiles((prevTiles) => {
       const newTiles = [...prevTiles];
       const targetIndex = newTiles.indexOf(targetFigure);
+      
       if (targetIndex !== -1) {
+        console.log(`Merging tiles: ${targetFigure} with ${droppedFigure}`);
         newTiles[targetIndex] = mergeTiles(targetFigure, droppedFigure);
-        return newTiles.filter(tile => tile !== droppedFigure);
+
+        // Log the new state of tiles after merge
+        console.log(`New state of tiles after merge: ${newTiles}`);
+
+        // Filter out the dropped tile
+        const updatedTiles = newTiles.filter(tile => tile !== droppedFigure);
+
+        // Log the final state of tiles
+        console.log(`Final state of tiles: ${updatedTiles}`);
+        return updatedTiles;
       }
+
+      // Log if no merge happened
+      console.log(`No tile was merged. Current state: ${newTiles}`);
       return newTiles;
     });
   };

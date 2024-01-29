@@ -27,7 +27,6 @@ export type GameAction =
   | MergeHandTilesAction
   | MulliganAction;
 
-
 const playTile = (state: GameState, action: PlayTileAction): GameState => {
   const { row, col, figure } = action.payload;
   const targetCell = state.boardTiles[row][col];
@@ -43,20 +42,19 @@ const playTile = (state: GameState, action: PlayTileAction): GameState => {
 // Handle dice roll
 const handleDiceRoll = (
   state: GameState,
-  payload: { player: string; newHand: string[] }
+  action: PlayerDiceRollAction
 ): GameState => {
-  const { player, newHand } = payload;
+  const { player, newHand } = action.payload;
   return player === "player1"
     ? { ...state, player1Hand: newHand }
     : { ...state, player2Hand: newHand };
 };
-
 // Merge hand tiles
 const mergeHandTiles = (
   state: GameState,
-  payload: { player: string; tileIndices: [number, number] }
+  action: MergeHandTilesAction
 ): GameState => {
-  const { player, tileIndices } = payload;
+  const { player, tileIndices } = action.payload;
   const hand = player === "player1" ? state.player1Hand : state.player2Hand;
   const [index1, index2] = tileIndices;
 
@@ -69,11 +67,11 @@ const mergeHandTiles = (
     ? { ...state, player1Hand: newHand }
     : { ...state, player2Hand: newHand };
 };
-
 const handleMulligan = (
   state: GameState,
-  player: "player1" | "player2"
+  action: MulliganAction
 ): GameState => {
+  const { player } = action.payload;
   const currentHand =
     player === "player1" ? state.player1Hand : state.player2Hand;
   const newHand = performMulligan(currentHand);

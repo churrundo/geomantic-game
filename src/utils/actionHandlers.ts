@@ -36,7 +36,9 @@ const playTile = (state: GameState, action: PlayTileAction): GameState => {
   const newBoardTiles = state.boardTiles.map((row) => [...row]);
   newBoardTiles[row][col] = newFigure;
 
-  return { ...state, boardTiles: newBoardTiles };
+  const nextPlayer = state.currentPlayer === "player1" ? "player2" : "player1";
+
+  return { ...state, boardTiles: newBoardTiles, currentPlayer: nextPlayer };
 };
 
 // Handle dice roll

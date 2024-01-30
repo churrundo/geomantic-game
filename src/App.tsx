@@ -1,27 +1,26 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import Board from "./components/Board";
 import Hand from "./components/Hand";
 import Dice from "./components/Dice";
-import { GameProvider } from "./GameContext";
+import { GameProvider, useGameContext } from "./GameContext";
 
 const App = () => {
-  const [handTiles, setHandTiles] = useState<string[]>([]);
+  const { state, dispatch } = useGameContext();
+  const { boardTiles, currentPlayer, player1Hand, player2Hand } = state;
+  const currentHand = currentPlayer === "player1" ? player1Hand : player2Hand;
 
-  const handleDiceRoll = (figures: string[]) => {
-    console.log("Dice rolled, new figures:", figures);
-    setHandTiles(figures);
-  };
-  const removeTileFromHand = useCallback((figure: string) => {
-    setHandTiles((prevTiles) => prevTiles.filter((tile) => tile !== figure));
-  }, []);
+  const handleDiceRoll = useCallback((figures: string[]) => {
+    // Dispatch an action to update the hand tiles in the global state
+    dispatch({ type: "PLAYER_DICE_ROLL", payload: { player: currentPlayer, newHand: figures } });
+  }, [currentPlayer]); // Only currentPlayer is the dependency
 
   return (
     <GameProvider>
       <div className="App">
         <h1>Geomantic Game</h1>
-        <Board onTilePlaced={removeTileFromHand} />
+        <Board boardTiles={boardTiles} />
         <Dice onRoll={handleDiceRoll} />
-        <Hand tiles={handTiles} setTiles={setHandTiles} />
+        <Hand tiles={currentHand} />
       </div>
     </GameProvider>
   );

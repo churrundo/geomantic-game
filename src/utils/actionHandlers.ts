@@ -1,5 +1,5 @@
 import { GameState } from "../GameContext";
-import { mergeTiles, performMulligan } from "./gameUtils";
+import { mergeTiles, performMulligan, checkForWin } from "./gameUtils";
 
 export type PlayTileAction = {
   type: "PLAY_TILE";
@@ -36,9 +36,13 @@ const playTile = (state: GameState, action: PlayTileAction): GameState => {
   const newBoardTiles = state.boardTiles.map((row) => [...row]);
   newBoardTiles[row][col] = newFigure;
 
+  const hasWon = checkForWin(newBoardTiles, {row, col});
+
   const nextPlayer = state.currentPlayer === "player1" ? "player2" : "player1";
 
-  return { ...state, boardTiles: newBoardTiles, currentPlayer: nextPlayer };
+  return hasWon
+    ? { ...state, boardTiles: newBoardTiles, winner: state.currentPlayer }
+    : { ...state, boardTiles: newBoardTiles, currentPlayer: nextPlayer };
 };
 
 // Handle dice roll

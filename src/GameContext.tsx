@@ -14,7 +14,8 @@ export type GameState = {
     boardTiles: (string | null)[][];
     player1Hand: string[];
     player2Hand: string[];
-    currentPlayer: "player1"|"player2"
+    currentPlayer: "player1"|"player2";
+    winner: null | "player1" | "player2";
   };
   
 
@@ -26,6 +27,7 @@ const initialState: GameState = {
   player1Hand: [],
   player2Hand: [],
   currentPlayer: "player1",
+  winner: null
 };
 
 // Create a context

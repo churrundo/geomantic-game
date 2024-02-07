@@ -1,7 +1,11 @@
-// Yields four random figures 
+import { checkDiagonals, checkRowAndCol } from "./winConditions";
+
+// Yields four random figures
 export const rollDice = (): string[] => {
   return Array.from({ length: 4 }, () =>
-    Array.from({ length: 4 }, () => Math.round(Math.random()).toString()).join('')
+    Array.from({ length: 4 }, () => Math.round(Math.random()).toString()).join(
+      ""
+    )
   );
 };
 // Merges two binary strings using bitwise XOR operation
@@ -50,4 +54,13 @@ export const updateBoard = (
   newBoard[row][col] = newFigure;
 
   return newBoard;
+};
+
+export const checkForWin = (
+  board: (string | null)[][],
+  position: { row: number; col: number }
+): boolean => {
+  return checkRowAndCol(board, position) || checkDiagonals(board)
+    ? true
+    : false;
 };

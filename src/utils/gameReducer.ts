@@ -12,13 +12,17 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
 
   switch (action.type) {
     case "PLAY_TILE":
-      newState = actionHandlers.PLAY_TILE(state, action as PlayTileAction);
+      newState = actionHandlers.PLAY_TILE(
+        state, 
+        action as PlayTileAction);
+      newState.diceRolledThisTurn = false;
       break;
     case "PLAYER_DICE_ROLL":
       newState = actionHandlers.PLAYER_DICE_ROLL(
         state,
         action as PlayerDiceRollAction
       );
+      newState.diceRolledThisTurn = true;
       break;
     case "MERGE_HAND_TILES":
       newState = actionHandlers.MERGE_HAND_TILES(
@@ -27,7 +31,9 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       );
       break;
     case "MULLIGAN":
-      newState = actionHandlers.MULLIGAN(state, action as MulliganAction);
+      newState = actionHandlers.MULLIGAN(
+        state,
+        action as MulliganAction);
       break;
     default:
       newState = state;

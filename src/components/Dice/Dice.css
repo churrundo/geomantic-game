@@ -1,0 +1,11 @@
+.dice {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .dice button {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  

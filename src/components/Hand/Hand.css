@@ -1,6 +1,22 @@
 .hand {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  width: 80px; /* Match tile width for vertical alignment */
+  gap: 4px;
+}
+
+/* Assuming a class added to the hand container based on the current player */
+.hand.current-player {
+  border: 2px solid darkblue;
+}
+
+.tile {
+  width: 80px;
+  height: 80px;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #bbb;
+  cursor: grab;
+}

@@ -5,45 +5,54 @@ import "./Hand.css";
 
 type HandProps = {
   tiles: string[];
+  player: "player1" | "player2";
+  currentPlayer: "player1" | "player2";
 };
 
-const Hand: React.FC<HandProps> = ({tiles}) => {
+const Hand: React.FC<HandProps> = ({ player, currentPlayer }) => {
   const { state, dispatch } = useGameContext();
-  const currentHand =
-    state.currentPlayer === "player1" ? state.player1Hand : state.player2Hand;
+  const tiles = player === "player1" ? state.player1Hand : state.player2Hand;
 
-  const handleDragStart = (
-    event: React.DragEvent,
-    figure: string,
-    index: number
-  ) => {
-    const dragData = JSON.stringify({ figure, index });
-    event.dataTransfer.setData("application/json", dragData);
-  };
+  const handleDragStart =
+    (figure: string, index: number) => (event: React.DragEvent) => {
+      const dragData = JSON.stringify({ figure, index });
+      console.log("Setting drag data:", dragData);
+      event.dataTransfer.setData("application/json", dragData);
+    };
 
-  const handleTileDrop = (targetIndex: number) => (event: React.DragEvent) => {
+  const handleDrop = (targetIndex: number) => (event: React.DragEvent) => {
     event.preventDefault();
     const dragData = JSON.parse(event.dataTransfer.getData("application/json"));
-    if (dragData && dragData.index !== targetIndex) {
-      // Dispatch merge action
+    console.log("Parsed drag data:", dragData);
+    const sourceIndex = dragData.index;
+    if (sourceIndex !== targetIndex) {
+      console.log("Dispatching MERGE_HAND_TILES with payload:", {
+        player,
+        tileIndices: [sourceIndex, targetIndex],
+      });
       dispatch({
         type: "MERGE_HAND_TILES",
         payload: {
-          player: state.currentPlayer,
-          tileIndices: [dragData.index, targetIndex],
+          player,
+          tileIndices: [sourceIndex, targetIndex],
         },
       });
     }
   };
 
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault(); // Necessary to allow dropping
+  };
+
   return (
-    <div className="hand">
-      {currentHand.map((figure, index) => (
+    <div className={`hand ${currentPlayer === player ? "current-player" : ""}`}>
+      {tiles.map((tile, index) => (
         <Tile
-          key={`${figure}-${index}`}
-          figure={figure}
-          onDragStart={(event) => handleDragStart(event, figure, index)}
-          onDrop={() => handleTileDrop(index)}
+          key={`${tile}-${index}`}
+          figure={tile}
+          onDragStart={handleDragStart(tile, index)}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop(index)}
         />
       ))}
     </div>

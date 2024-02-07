@@ -36,7 +36,7 @@ const playTile = (state: GameState, action: PlayTileAction): GameState => {
   const newBoardTiles = state.boardTiles.map((row) => [...row]);
   newBoardTiles[row][col] = newFigure;
 
-  const hasWon = checkForWin(newBoardTiles, {row, col});
+  const hasWon = checkForWin(newBoardTiles, { row, col });
 
   const nextPlayer = state.currentPlayer === "player1" ? "player2" : "player1";
 
@@ -55,24 +55,42 @@ const handleDiceRoll = (
     ? { ...state, player1Hand: newHand }
     : { ...state, player2Hand: newHand };
 };
+
 // Merge hand tiles
 const mergeHandTiles = (
   state: GameState,
   action: MergeHandTilesAction
 ): GameState => {
   const { player, tileIndices } = action.payload;
+  const [sourceIndex, targetIndex] = tileIndices.sort((a, b) => a - b); // Ensure indices are in ascending order
   const hand = player === "player1" ? state.player1Hand : state.player2Hand;
-  const [index1, index2] = tileIndices;
 
-  const mergedTile = mergeTiles(hand[index1], hand[index2]);
-  const newHand = [...hand];
-  newHand.splice(index1, 1, mergedTile);
-  newHand.splice(index2 > index1 ? index2 - 1 : index2, 1);
+  console.log(
+    `Merging tiles at indices: ${sourceIndex}, ${targetIndex}, Figures: ${hand[sourceIndex]}, ${hand[targetIndex]}`
+  );
+
+  // Perform the merge
+  const mergedTile = mergeTiles(hand[sourceIndex], hand[targetIndex]);
+  console.log(`Result of merge: ${mergedTile}`);
+
+  // Update the hand: place the merged tile at the target index
+  let newHand = [...hand];
+  if (sourceIndex !== targetIndex) {
+    // If dragging onto a different tile, remove the source tile and update the target tile with the merged result
+    newHand[targetIndex] = mergedTile; // Update the target position with the merged tile
+    newHand.splice(sourceIndex, 1); // Remove the source tile from the hand
+  } else {
+    // If dropped onto itself, just update the tile
+    newHand[sourceIndex] = mergedTile;
+  }
+
+  console.log(`New hand after merge: ${newHand.join(",")}`);
 
   return player === "player1"
     ? { ...state, player1Hand: newHand }
     : { ...state, player2Hand: newHand };
 };
+
 const handleMulligan = (
   state: GameState,
   action: MulliganAction

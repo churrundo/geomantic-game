@@ -1,16 +1,18 @@
 type TileProps = {
   figure: string;
   onDragStart?: (event: React.DragEvent) => void;
+  onDragOver?: (event: React.DragEvent) => void;
   onDrop?: (event: React.DragEvent) => void;
 };
 
-const Tile: React.FC<TileProps> = ({ figure, onDragStart, onDrop }) => {
+const Tile: React.FC<TileProps> = ({ figure, onDragStart, onDrop, onDragOver }) => {
   return (
     <div
       className="tile"
-      draggable={true} // Make sure the tile is draggable
-      onDragStart={onDragStart} // Attach the onDragStart handler
-      onDrop={onDrop} // Attach the onDrop handler (if you plan to allow dropping on tiles)
+      draggable={true}
+      onDragStart={onDragStart}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
     >
       {figure}
     </div>

@@ -16,6 +16,7 @@ export type GameState = {
     player2Hand: string[];
     currentPlayer: "player1"|"player2";
     winner: null | "player1" | "player2";
+    diceRolledThisTurn: boolean;
   };
   
 
@@ -27,7 +28,8 @@ const initialState: GameState = {
   player1Hand: [],
   player2Hand: [],
   currentPlayer: "player1",
-  winner: null
+  winner: null,
+  diceRolledThisTurn: false,
 };
 
 // Create a context

@@ -29,20 +29,60 @@ export type GameAction =
 
 const playTile = (state: GameState, action: PlayTileAction): GameState => {
   const { row, col, figure } = action.payload;
+  console.log(
+    `Playing tile at row: ${row}, col: ${col} with figure: ${figure}`
+  );
+
   const targetCell = state.boardTiles[row][col];
+  console.log(`Target cell before placing tile: ${targetCell}`);
+
+  // If there's already a figure in the target cell, merge them, otherwise just use the new figure.
   const newFigure = targetCell ? mergeTiles(targetCell, figure) : figure;
+  console.log(`New figure after merging (if applicable): ${newFigure}`);
 
-  // Create a deep copy of the current board and update the cell
-  const newBoardTiles = state.boardTiles.map((row) => [...row]);
-  newBoardTiles[row][col] = newFigure;
+  // Create a deep copy of the current board and update the cell with the new figure.
+  const newBoardTiles = state.boardTiles.map((rowArr, rowIndex) =>
+    rowArr.map((cell, colIndex) => {
+      if (rowIndex === row && colIndex === col) {
+        return newFigure; // Place the new or merged figure.
+      }
+      return cell; // Keep the existing cell as is.
+    })
+  );
 
+  console.log("Updated board state:", newBoardTiles);
+
+  // Determine the hand property name based on the current player
+  const currentPlayerHandKey =
+    state.currentPlayer === "player1" ? "player1Hand" : "player2Hand";
+
+  // Filter out the played tile from the current player's hand
+  const updatedHand = state[currentPlayerHandKey].filter(
+    (tile) => tile !== figure
+  );
+
+  console.log(`Updated hand for ${state.currentPlayer}:`, updatedHand);
+
+  // After placing the tile, check if this move wins the game.
   const hasWon = checkForWin(newBoardTiles, { row, col });
+  console.log(`Does this move win the game? ${hasWon}`);
 
+  // Determine the next player.
   const nextPlayer = state.currentPlayer === "player1" ? "player2" : "player1";
+  console.log(`Next player: ${nextPlayer}`);
 
-  return hasWon
-    ? { ...state, boardTiles: newBoardTiles, winner: state.currentPlayer }
-    : { ...state, boardTiles: newBoardTiles, currentPlayer: nextPlayer };
+  const updatedState = {
+    ...state,
+    boardTiles: newBoardTiles,
+    [currentPlayerHandKey]: updatedHand, // Apply the updated hand
+    currentPlayer: hasWon ? state.currentPlayer : nextPlayer, // Keep the winner as the current player if the game is won
+    winner: hasWon ? state.currentPlayer : state.winner,
+  };
+
+  // Log the updated game state for debugging
+  console.log("Updated game state after action:", updatedState);
+
+  return updatedState;
 };
 
 // Handle dice roll

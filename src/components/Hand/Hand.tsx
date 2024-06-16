@@ -15,12 +15,20 @@ const Hand: React.FC<HandProps> = ({ player, currentPlayer }) => {
 
   const handleDragStart =
     (figure: string, index: number) => (event: React.DragEvent) => {
+      if (player !== currentPlayer) {
+        event.preventDefault();
+        return;
+      }
       const dragData = JSON.stringify({ figure, index });
       console.log("Setting drag data:", dragData);
       event.dataTransfer.setData("application/json", dragData);
     };
 
   const handleDrop = (targetIndex: number) => (event: React.DragEvent) => {
+    if (player !== currentPlayer) {
+      event.preventDefault();
+      return;
+    }
     event.preventDefault();
     const dragData = JSON.parse(event.dataTransfer.getData("application/json"));
     console.log("Parsed drag data:", dragData);
@@ -41,7 +49,9 @@ const Hand: React.FC<HandProps> = ({ player, currentPlayer }) => {
   };
 
   const handleDragOver = (event: React.DragEvent) => {
-    event.preventDefault(); // Necessary to allow dropping
+    if (player === currentPlayer) {
+      event.preventDefault();
+    }
   };
 
   return (

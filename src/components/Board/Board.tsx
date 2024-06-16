@@ -13,7 +13,10 @@ const Board: React.FC<BoardProps> = ({ boardTiles }) => {
   const handleTileDrop =
     (row: number, col: number) => (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      const figure = event.dataTransfer.getData("text/plain");
+      const dragData = JSON.parse(
+        event.dataTransfer.getData("application/json")
+      );
+      const { figure } = dragData; // Extract the figure from the parsed data
 
       // Dispatch PLAY_TILE action
       dispatch({

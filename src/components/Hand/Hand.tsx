@@ -1,54 +1,58 @@
-// components/Hand/Hand.tsx
-import React from 'react';
-import Tile from '../Tile';
-import { mergeTiles } from '../../utils/gameUtils'; // Assuming this utility is implemented
-import './Hand.css';
+import React from "react";
+import Tile from "../Tile";
+import { useGameContext } from "../../GameContext"; // Import the hook
+import "./Hand.css";
 
 type HandProps = {
   tiles: string[];
-  setTiles: React.Dispatch<React.SetStateAction<string[]>>;
+  player: "player1" | "player2";
+  currentPlayer: "player1" | "player2";
 };
 
-const Hand: React.FC<HandProps> = ({ tiles, setTiles }) => {
-  const handleTileDrop = (targetFigure: string) => (event: React.DragEvent) => {
+const Hand: React.FC<HandProps> = ({ player, currentPlayer }) => {
+  const { state, dispatch } = useGameContext();
+  const tiles = player === "player1" ? state.player1Hand : state.player2Hand;
+
+  const handleDragStart =
+    (figure: string, index: number) => (event: React.DragEvent) => {
+      const dragData = JSON.stringify({ figure, index });
+      console.log("Setting drag data:", dragData);
+      event.dataTransfer.setData("application/json", dragData);
+    };
+
+  const handleDrop = (targetIndex: number) => (event: React.DragEvent) => {
     event.preventDefault();
-    const droppedFigure = event.dataTransfer.getData("text/plain");
+    const dragData = JSON.parse(event.dataTransfer.getData("application/json"));
+    console.log("Parsed drag data:", dragData);
+    const sourceIndex = dragData.index;
+    if (sourceIndex !== targetIndex) {
+      console.log("Dispatching MERGE_HAND_TILES with payload:", {
+        player,
+        tileIndices: [sourceIndex, targetIndex],
+      });
+      dispatch({
+        type: "MERGE_HAND_TILES",
+        payload: {
+          player,
+          tileIndices: [sourceIndex, targetIndex],
+        },
+      });
+    }
+  };
 
-    console.log(`Tile dropped: ${droppedFigure} onto ${targetFigure}`);
-
-    setTiles((prevTiles) => {
-      const newTiles = [...prevTiles];
-      const targetIndex = newTiles.indexOf(targetFigure);
-      
-      if (targetIndex !== -1) {
-        console.log(`Merging tiles: ${targetFigure} with ${droppedFigure}`);
-        newTiles[targetIndex] = mergeTiles(targetFigure, droppedFigure);
-
-        // Log the new state of tiles after merge
-        console.log(`New state of tiles after merge: ${newTiles}`);
-
-        // Filter out the dropped tile
-        const updatedTiles = newTiles.filter(tile => tile !== droppedFigure);
-
-        // Log the final state of tiles
-        console.log(`Final state of tiles: ${updatedTiles}`);
-        return updatedTiles;
-      }
-
-      // Log if no merge happened
-      console.log(`No tile was merged. Current state: ${newTiles}`);
-      return newTiles;
-    });
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault(); // Necessary to allow dropping
   };
 
   return (
-    <div className="hand">
+    <div className={`hand ${currentPlayer === player ? "current-player" : ""}`}>
       {tiles.map((tile, index) => (
-        <Tile 
-          key={`${tile}-${index}`} 
+        <Tile
+          key={`${tile}-${index}`}
           figure={tile}
-          onDragStart={() => {}} // Implement if needed
-          onDrop={handleTileDrop(tile)}
+          onDragStart={handleDragStart(tile, index)}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop(index)}
         />
       ))}
     </div>

@@ -1,12 +1,18 @@
 .board {
-    display: grid;
-    grid-template-columns: repeat(4, 50px);
-    grid-gap: 5px;
-  }
-  
-  .board-cell {
-    width: 50px;
-    height: 50px;
-    border: 1px solid grey;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  width: 350px; /* Adjust based on tile size, e.g., 4 tiles * 80px */
+  height: 350px;
+  margin: 0, 10px;
+  gap: 4px;
+}
+
+.board-cell {
+  width: 80px; /* Tile size */
+  height: 80px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+}

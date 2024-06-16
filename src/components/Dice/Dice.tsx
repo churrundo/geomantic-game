@@ -1,18 +1,17 @@
-// components/Dice/Dice.tsx
 import React from 'react';
+import { rollDice } from '../../utils/gameUtils';
 import './Dice.css';
 
 const Dice: React.FC<{ onRoll: (figures: string[]) => void }> = ({ onRoll }) => {
-  const rollDice = () => {
-    const figures = Array.from({ length: 4 }, () =>
-      Array.from({ length: 4 }, () => Math.round(Math.random()).toString()).join('')
-    );
+  const handleDiceRoll = () => {
+    const figures = rollDice();
+    console.log("Dice Rolled:", figures);
     onRoll(figures);
-  };
+    };
 
   return (
     <div className="dice">
-      <button onClick={rollDice}>Roll Dice</button>
+      <button onClick={handleDiceRoll}>Roll Dice</button>
     </div>
   );
 };

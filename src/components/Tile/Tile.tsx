@@ -1,3 +1,5 @@
+import React from 'react';
+
 type TileProps = {
   figure: string;
   onDragStart?: (event: React.DragEvent) => void;

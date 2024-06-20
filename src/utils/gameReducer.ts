@@ -1,20 +1,21 @@
-import { GameState } from "./../GameContext";
-import actionHandlers, {
+//gameReducer.ts
+
+import actionHandlers from "./actionHandlers";
+import {
+  GameAction,
+  GameState,
   PlayTileAction,
   PlayerDiceRollAction,
   MergeHandTilesAction,
   MulliganAction,
-} from "./actionHandlers"; // Adjust the import path as needed
-import { GameAction } from "./actionHandlers"; //adjust the import path as needed
+} from "../types/types";
 
 const gameReducer = (state: GameState, action: GameAction): GameState => {
   let newState: GameState;
 
   switch (action.type) {
     case "PLAY_TILE":
-      newState = actionHandlers.PLAY_TILE(
-        state, 
-        action as PlayTileAction);
+      newState = actionHandlers.PLAY_TILE(state, action as PlayTileAction);
       newState.diceRolledThisTurn = false;
       break;
     case "PLAYER_DICE_ROLL":
@@ -31,9 +32,7 @@ const gameReducer = (state: GameState, action: GameAction): GameState => {
       );
       break;
     case "MULLIGAN":
-      newState = actionHandlers.MULLIGAN(
-        state,
-        action as MulliganAction);
+      newState = actionHandlers.MULLIGAN(state, action as MulliganAction);
       break;
     default:
       newState = state;

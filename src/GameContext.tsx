@@ -1,39 +1,10 @@
+// src/GameContext.ts
 import React, { createContext, useContext, useReducer } from "react";
 import gameReducer from "./utils/gameReducer";
+import { GameState, GameProviderProps, GameContextType } from "./types/types"; // Adjust the import path as needed
 
-type GameContextType = {
-  state: typeof initialState;
-  dispatch: React.Dispatch<any>; // You can define a more specific type for your actions
-};
+const GameContext = createContext<GameContextType | undefined>(undefined);
 
-type GameProviderProps = {
-  children: React.ReactNode;
-};
-
-export type GameState = {
-    boardTiles: (string | null)[][];
-    player1Hand: string[];
-    player2Hand: string[];
-    currentPlayer: "player1"|"player2";
-    winner: null | "player1" | "player2";
-    diceRolledThisTurn: boolean;
-  };
-  
-
-// Define the shape of your game's state
-const initialState: GameState = {
-  boardTiles: Array(4)
-    .fill(null)
-    .map(() => Array(4).fill(null)),
-  player1Hand: [],
-  player2Hand: [],
-  currentPlayer: "player1",
-  winner: null,
-  diceRolledThisTurn: false,
-};
-
-// Create a context
-export const GameContext = createContext<GameContextType | undefined>(undefined);
 export const useGameContext = () => {
   const context = useContext(GameContext);
   if (!context) {
@@ -41,13 +12,22 @@ export const useGameContext = () => {
   }
   return context;
 };
-// Context provider component
+
+export const initialState: GameState = {
+  boardTiles: Array(4).fill(null).map(() => Array(4).fill(null)),
+  player1Hand: [],
+  player2Hand: [],
+  currentPlayer: "player1",
+  winner: null,
+  diceRolledThisTurn: false,
+};
+
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
-    const [state, dispatch] = useReducer(gameReducer, initialState);
-  
-    return (
-      <GameContext.Provider value={{ state, dispatch }}>
-        {children}
-      </GameContext.Provider>
-    );
-  };
+  const [state, dispatch] = useReducer(gameReducer, initialState);
+
+  return (
+    <GameContext.Provider value={{ state, dispatch }}>
+      {children}
+    </GameContext.Provider>
+  );
+};

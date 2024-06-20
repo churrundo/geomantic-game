@@ -15,7 +15,7 @@ export const checkRowAndCol = (
 };
 
 const checkDescendingDiagonal = (board: (string | null)[][]): boolean => {
-  let initial = board[0][0];
+  const initial = board[0][0];
   for (let i = 1; i < board.length; i++) {
     if (board[i][i] === null || board[i][i] !== initial) {
       return false;
@@ -24,7 +24,7 @@ const checkDescendingDiagonal = (board: (string | null)[][]): boolean => {
   return initial !== null;
 };
 const checkAscendingDiagonal = (board: (string | null)[][]): boolean => {
-  let initial = board[board.length - 1][0];
+  const initial = board[board.length - 1][0];
   for (let i = 1; i < board.length; i++) {
     if (
       board[board.length - 1 - i][i] === null ||

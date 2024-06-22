@@ -3,6 +3,7 @@ import React, { useCallback } from "react";
 import Board from "./components/Board";
 import Hand from "./components/Hand";
 import Dice from "./components/Dice";
+import RoomCode from './components/RoomCode';
 import { useGameContext } from "./GameContext";
 import "./App.css"
 
@@ -27,6 +28,7 @@ const App = () => {
         <Hand tiles={player2Hand} player="player2" currentPlayer={currentPlayer} />
       </div>
       <Dice onRoll={handleDiceRoll} canRoll={!diceRolledThisTurn} />
+      <RoomCode />
     </div>
   );
 };

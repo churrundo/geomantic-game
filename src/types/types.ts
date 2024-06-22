@@ -1,5 +1,6 @@
 // src/types/types.ts
-
+import { ReactNode } from "react";
+import { Socket } from "socket.io-client";
 // GameState
 export type GameState = {
   boardTiles: (string | null)[][];
@@ -8,12 +9,23 @@ export type GameState = {
   currentPlayer: "player1" | "player2";
   winner: "player1" | "player2" | null;
   diceRolledThisTurn: boolean;
+  roomCode: string | null;
 };
 
 export type GameContextType = {
-    state: GameState;
-    dispatch: React.Dispatch<GameAction>;
-  };
+  state: GameState;
+  dispatch: React.Dispatch<GameAction>;
+  sendAction: (action: GameAction) => void;
+};
+
+//Socket
+export type SocketProviderProps = {
+  children: ReactNode;
+};
+
+export type SocketContextType = {
+  socket: Socket | null;
+};
 
 // Actions
 export type PlayTileAction = {
@@ -43,8 +55,7 @@ export type GameAction =
   | MergeHandTilesAction
   | MulliganAction;
 
-
 //Other Types
 export type GameProviderProps = {
-    children: React.ReactNode;
+  children: React.ReactNode;
 };
